@@ -1,16 +1,22 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useTodos } from "@/lib/useTodos";
-import { TodoStatus } from "@/lib/types";
 import BackButton from "../components/ui/BackButton";
 import TodoForm from "../components/todo/TodoForm";
+import { TodoStatus } from "@/lib/types";
+import { useRouter } from "next/navigation";
+import { useTodos } from "@/lib/useTodos";
 
 export default function AddTodo() {
   const router = useRouter();
   const { addTodo } = useTodos();
 
-  const handleSubmit = (data: { title: string; description: string; status: TodoStatus }) => {
+  const handleSubmit = (data: {
+    title: string;
+    description: string;
+    status: TodoStatus;
+    priority: "Low" | "Medium" | "High";
+    createdAt: string;
+  }) => {
     addTodo(data);
     router.push("/");
   };
@@ -24,7 +30,11 @@ export default function AddTodo() {
           Create New Todo
         </h1>
 
-        <TodoForm onSubmit={handleSubmit} submitButtonText="Save Form" onCancelHref="/" />
+        <TodoForm
+          onSubmit={handleSubmit}
+          submitButtonText="Save Form"
+          onCancelHref="/"
+        />
       </div>
     </div>
   );

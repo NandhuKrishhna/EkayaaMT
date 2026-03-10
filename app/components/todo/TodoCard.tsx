@@ -1,6 +1,7 @@
-import { getStatusBadge } from "@/constants/getStatusBadge";
-import { Todo } from "@/lib/types";
 import Button from "../ui/Button";
+import { Todo } from "@/lib/types";
+import { getPriorityBadge } from "@/constants/getPriorityBadge";
+import { getStatusBadge } from "@/constants/getStatusBadge";
 
 type TodoCardProps = {
   todo: Todo;
@@ -22,6 +23,7 @@ const TodoCard = ({ todo, editTodo, deleteTodo }: TodoCardProps) => {
             {todo.description}
           </p>
         )}
+        <div className="mt-2">{getPriorityBadge(todo.priority)}</div>
       </div>
 
       <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700/50 flex justify-end gap-2 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">

@@ -5,4 +5,6 @@ export interface Todo {
   title: string;
   description: string;
   status: TodoStatus;
+  priority: "Low" | "Medium" | "High";
+  createdAt: string;
 }

@@ -1,17 +1,40 @@
+import React from "react";
 import { TODOS_KEY } from "@/constants/todo";
 import { Todo } from "./types";
-import React from "react";
 import { useRouter } from "next/navigation";
 
 export function useTodos() {
   const [todos, setTodos] = React.useState<Todo[]>([]);
   const [isLoaded, setIsLoaded] = React.useState<boolean>(false);
   const router = useRouter();
+
+  // sorting todos by priority: High > Medium > Low
+  // 2: If both have same priority, sort by creation time (newest first)
   React.useEffect(() => {
     try {
       const stored = localStorage.getItem(TODOS_KEY);
       if (stored) {
-        setTodos(JSON.parse(stored));
+        console.log("Loaded todos from local storage:", JSON.parse(stored));
+        const parsedTodos = JSON.parse(stored) as Todo[];
+        const normalizedTodos = parsedTodos.map((todo) => ({
+          ...todo,
+          priority: todo.priority ?? "Low",
+        }));
+        const priorityOrder: Record<string, number> = {
+          High: 3,
+          Medium: 2,
+          Low: 1,
+        };
+        const sortedTodos = [...normalizedTodos].sort((a, b) => {
+          const p = priorityOrder[a.priority];
+          const q = priorityOrder[b.priority];
+          if (p !== q) return q - p;
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+        });
+
+        setTodos(sortedTodos);
       }
     } catch (e) {
       console.error("Failed to load todos from local storage", e);

@@ -1,9 +1,10 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
-import { TodoStatus, Todo } from "@/lib/types";
+import { Todo, TodoStatus } from "@/lib/types";
+
 import Button from "../ui/Button";
+import Link from "next/link";
+import React from "react";
 
 type TodoFormProps = {
   initialData?: Partial<Todo>;
@@ -11,11 +12,13 @@ type TodoFormProps = {
     title: string;
     description: string;
     status: TodoStatus;
+    priority: "Low" | "Medium" | "High";
+    createdAt: string;
   }) => void;
   submitButtonText?: string;
   onCancelHref?: string;
 };
-
+// Add a new fild : Priority with options: Low, Medium, High
 const TodoForm = ({
   initialData,
   onSubmit,
@@ -28,6 +31,9 @@ const TodoForm = ({
   );
   const [status, setStatus] = React.useState<TodoStatus>(
     initialData?.status || "Pending",
+  );
+  const [priority, setPriority] = React.useState<"Low" | "Medium" | "High">(
+    initialData?.priority || "Low",
   );
   const [error, setError] = React.useState("");
 
@@ -43,6 +49,8 @@ const TodoForm = ({
       title: title.trim(),
       description: description.trim(),
       status,
+      priority,
+      createdAt: initialData?.createdAt || new Date().toISOString(),
     });
   };
 
@@ -113,6 +121,29 @@ const TodoForm = ({
           >
             <option value="Pending">Pending</option>
             <option value="Completed">Completed</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label
+          htmlFor="priority"
+          className="block text-sm font-medium leading-6 text-slate-900 dark:text-slate-200"
+        >
+          Priority
+        </label>
+        <div className="mt-2 text-black">
+          <select
+            id="priority"
+            name="priority"
+            value={priority}
+            onChange={(e) =>
+              setPriority(e.target.value as "Low" | "Medium" | "High")
+            }
+            className="block w-full rounded-md border-0 py-2 pl-3 pr-10 text-slate-900 dark:text-white dark:bg-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 dark:ring-slate-700 focus:ring-2 focus:ring-inset focus:ring-blue-600 dark:focus:ring-blue-500 sm:text-sm sm:leading-6 transition-all"
+          >
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
           </select>
         </div>
       </div>
